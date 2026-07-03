@@ -73,6 +73,7 @@ Note: With default settings there is at least one guaranteed eclipse per ingame 
 
 # Incompatible Mods / Mods with issues
 - Iris (on MC 26.2)
+- Chunks Fade In mod
 - Puddles and Floods
 - Create Aeronautics
 - BBS (disable shader curves setting in BBS settings)
