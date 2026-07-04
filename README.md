@@ -81,6 +81,7 @@ Note: With default settings there is at least one guaranteed eclipse per ingame 
 - Epic Fight Mod (disable the compute shader setting in the Epic Fight Mod settings)
 - Particle Rain
 - Physics Mod (Smoke, Fluid Sim and Weather)
+- Flerovium
 
 # You want MOAR performance?
 > [!NOTE]  
