@@ -72,10 +72,10 @@ Note: With default settings there is at least one guaranteed eclipse per ingame 
  - once the zip file finishes downloading, install it like a normal shader. you do NOT need to unzip/extract/decompress.
 
 # Incompatible Mods / Mods with issues
-- Iris (on MC 26.2)
+- Iris (on MC 26.2, requires "[Iris Extension](https://modrinth.com/mod/iris-extension)" for fix)
 - Chunks Fade In mod
 - Puddles and Floods
-- Create Aeronautics
+- Create Aeronautics (requires "[Iris Extension](https://modrinth.com/mod/iris-extension)" for fix)
 - BBS (disable shader curves setting in BBS settings)
 - Iris Uniforms
 - Epic Fight Mod (disable the compute shader setting in the Epic Fight Mod settings)

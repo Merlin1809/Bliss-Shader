@@ -15,9 +15,9 @@ uniform sampler2D depthtex2;
 uniform sampler2D noisetex;
 uniform sampler2D shadowcolor1;
 
-#if !defined IS_IRIS || (defined SHADER_GRASS_SETTING && MC_VERSION < 12101 && !defined SHADER_GRASS_UNSUPPORTED_FIX) || defined EXPLODE_THE_SHADER
+// #if !defined IS_IRIS || (defined SHADER_GRASS_SETTING && MC_VERSION < 12101 && !defined SHADER_GRASS_UNSUPPORTED_FIX) || defined EXPLODE_THE_SHADER
   #include "/lib/text_rendering.glsl"
-#endif
+// #endif
 
 #if DEBUG_VIEW == debug_CLOUDDEPTHTEX && defined CUMULONIMBUS_LIGHTNING && CUMULONIMBUS > 0
   #extension GL_NV_gpu_shader5 : enable
@@ -316,4 +316,24 @@ void main() {
     printString((_D, _i, _s, _a, _b, _l, _e, _space, _o, _n, _e, _space, _o, _f, _space, _t, _h, _e, _m, _exclm));
     endText(gl_FragColor.rgb);
   #endif
+
+  #if defined SHADER_GRASS_SETTING && MC_VERSION >= 260200
+  const float textSize2 = 4.0;
+  beginText(ivec2(gl_FragCoord.xy/textSize2), ivec2(0.05*viewWidth/textSize2, 0.75*viewHeight/textSize2));
+  text.fgCol = vec4(1.0, 0.0, 0.0, 1.0);
+  printString((_S, _h, _a, _d, _e, _r, _space, _G, _r, _a, _s, _s, _space, _i, _s, _space, _b, _r, _o, _k, _e, _n, _space, _o, _n, _space, _2, _6, _dot, _2, _space, _o, _r, _space, _h, _i, _g, _h, _e, _r, _exclm));
+  printLine();
+  printString((_D, _i, _s, _a, _b, _l, _e, _space, _i, _t, _exclm));
+  endText(gl_FragColor.rgb);
+#endif
+
+#if defined SHADER_GRASS_SETTING && defined CREATE_AERONAUTICS
+  const float textSize3 = 4.0;
+  beginText(ivec2(gl_FragCoord.xy/textSize3), ivec2(0.05*viewWidth/textSize3, 0.75*viewHeight/textSize3));
+  text.fgCol = vec4(1.0, 0.0, 0.0, 1.0);
+  printString((_S, _h, _a, _d, _e, _r, _space, _G, _r, _a, _s, _s, _space, _i, _s, _space, _b, _r, _o, _k, _e, _n, _space, _b, _y, _space, _C, _r, _e, _a, _t, _e, _space, _A, _e, _r, _o, _n, _a, _u, _t, _i, _c, _s, _exclm));
+  printLine();
+  printString((_D, _i, _s, _a, _b, _l, _e, _space, _i, _t, _exclm));
+  endText(gl_FragColor.rgb);
+#endif
 }
