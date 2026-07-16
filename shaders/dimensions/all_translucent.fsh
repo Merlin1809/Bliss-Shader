@@ -978,7 +978,7 @@ if (gl_FragCoord.x * texelSize.x < 1.0  && gl_FragCoord.y * texelSize.y < 1.0 )	
 		float skylight = mix(0.2 + 2.3*(1.0-lightmap.y), 2.5, SkylightDir)/2.5;
 		AmbientLightColor *= skylight;
 
-		Indirect_lighting = doIndirectLighting(AmbientLightColor, MinimumLightColor, lightmap.y);
+		Indirect_lighting = doIndirectLighting(AmbientLightColor, MinimumLightColor, clamp(lightmap.y, 0.0, 1.0));
 	#endif
 
 	#ifdef NETHER_SHADER
