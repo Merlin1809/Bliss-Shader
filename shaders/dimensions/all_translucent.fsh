@@ -1028,7 +1028,7 @@ if (gl_FragCoord.x * texelSize.x < 1.0  && gl_FragCoord.y * texelSize.y < 1.0 )	
 
 		vec3 AmbientLightColor = vec3(AmbientLightEnd_R,AmbientLightEnd_G,AmbientLightEnd_B) ;
 			
-		Indirect_lighting = AmbientLightColor + 0.7 * AmbientLightColor * clamp(dot(worldSpaceNormal, normalize(feetPlayerPos)), 0.0, 1.0);
+		Indirect_lighting = AmbientLightColor + 0.7 * AmbientLightColor * clamp(dot(worldSpaceNormal, normalize(feetPlayerPos)), -1.0, 1.0);
 		Indirect_lighting *= 0.1;
 	#endif
 
