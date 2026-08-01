@@ -204,6 +204,8 @@ float ComputeShadowMap(inout vec3 directLightColor, vec3 playerPos, float maxDis
 	float shadowmap = 0.0;
 	vec3 translucentTint = vec3(0.0);
 
+	if (projectedShadowPosition.z > 1.0 || projectedShadowPosition.z < 0.0) return 1.0;
+
 	#ifdef TRANSLUCENT_COLORED_SHADOWS
 
 		// determine when opaque shadows are overlapping translucent shadows by getting the difference of opaque depth and translucent depth
@@ -670,7 +672,7 @@ void main() {
 
 	normal = applyBump(tbnMatrix, NormalTex.xyz);
 	
-	vec2 lightmap = clamp(lmtexcoord.zw,0.0,0.97);
+	vec2 lightmap = clamp(lmtexcoord.zw,0.0,1.0);
 	
 	vec4 data1 = vec4(encodeNormal(normal), lightmap);
 

@@ -105,7 +105,7 @@ vec3 doBlockLightLighting(
     vec3 lightColor, float lightmap,
     vec3 playerPos, vec3 lpvPos
     #ifdef MAIN_SHADOW_PASS
-    , vec3 viewPos, bool depthCheck, float noise, vec3 normals, bool hand
+    , vec3 viewPos, bool depthCheck, float noise, vec3 normals, bool hand, bool opaqueParticles
     #endif
 ){
     lightmap = clamp(lightmap,0.0,1.0);
@@ -124,6 +124,10 @@ vec3 doBlockLightLighting(
 
         #ifdef VANILLA_LIGHTMAP_MASK
             lpvSample.rgb *= lightmapCurve;
+        #endif
+
+        #ifdef MAIN_SHADOW_PASS
+            if(opaqueParticles) lpvSample.rgb += lightmapCurve;
         #endif
         // vec3 lpvBlockLight = GetLpvBlockLight(lpvSample);
 

@@ -432,16 +432,18 @@ vec4 waterVolumetrics(vec3 rayStart, vec3 rayEnd, float rayLength, vec2 dither, 
 				pos = pos*vec3(0.5,0.5,0.5/6.0)+0.5;
 				// sh = texture( shadowtex0HW, pos).x;
 
-				#ifdef TRANSLUCENT_COLORED_SHADOWS
-					sh = vec3(texture(shadowtex0HW, pos).x);
+				if (pos.z < 1.0 && pos.z > 0.0) {
+					#ifdef TRANSLUCENT_COLORED_SHADOWS
+						sh = vec3(texture(shadowtex0HW, pos).x);
 
-					if(texture(shadowtex1HW, pos).x > pos.z && sh.x < 1.0){
-						vec4 translucentShadow = texture(shadowcolor0, pos.xy);
-						if(translucentShadow.a < 0.9) sh = normalize(translucentShadow.rgb+0.0001);
-					}
-				#else
-					sh = vec3(texture(shadowtex0HW, pos).x);
-				#endif
+						if(texture(shadowtex1HW, pos).x > pos.z && sh.x < 1.0){
+							vec4 translucentShadow = texture(shadowcolor0, pos.xy);
+							if(translucentShadow.a < 0.9) sh = normalize(translucentShadow.rgb+0.0001);
+						}
+					#else
+						sh = vec3(texture(shadowtex0HW, pos).x);
+					#endif
+				}
 			}
 
 			sh *= GetCloudShadow(progressW, WsunVec * lightSourceCheck);
@@ -675,16 +677,18 @@ vec4 waterVolumetrics_alt( vec3 rayStart, vec3 rayEnd, float estEndDepth, float 
 				pos = pos*vec3(0.5,0.5,0.5/6.0)+0.5;
 				// sh = texture( shadowtex0HW, pos).x;
 
-				#ifdef TRANSLUCENT_COLORED_SHADOWS
-					sh2 *= vec3(texture(shadowtex0HW, pos).x);
+				if (pos.z < 1.0 && pos.z > 0.0) {
+					#ifdef TRANSLUCENT_COLORED_SHADOWS
+						sh2 *= vec3(texture(shadowtex0HW, pos).x);
 
-					if(texture(shadowtex1HW, pos).x > pos.z && sh2.x < 1.0){
-						vec4 translucentShadow = texture(shadowcolor0, pos.xy);
-						if(translucentShadow.a < 0.9) sh2 = normalize(translucentShadow.rgb+0.0001);
-					}
-				#else
-					sh2 *= vec3(texture(shadowtex0HW, pos).x);
-				#endif
+						if(texture(shadowtex1HW, pos).x > pos.z && sh2.x < 1.0){
+							vec4 translucentShadow = texture(shadowcolor0, pos.xy);
+							if(translucentShadow.a < 0.9) sh2 = normalize(translucentShadow.rgb+0.0001);
+						}
+					#else
+						sh2 *= vec3(texture(shadowtex0HW, pos).x);
+					#endif
+				}
 			}
 		#endif
 

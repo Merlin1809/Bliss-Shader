@@ -372,6 +372,8 @@ float ComputeVoxelShadowMap(inout vec3 directLightColor, vec3 playerPos, float m
 	float shadowmap = 0.0;
 	vec3 translucentTint = vec3(0.0);
 
+	if (projectedShadowPosition.z > 1.0 || projectedShadowPosition.z < 0.0) return 1.0;
+
 	#ifdef BASIC_SHADOW_FILTER
 		int samples = int(SHADOW_FILTER_SAMPLE_COUNT * 0.5);
 		#ifdef END_SHADER
@@ -1142,6 +1144,8 @@ float ComputePhotonicsShadowMap(inout vec3 directLightColor, vec3 playerPos, flo
 	
 	float shadowmap = 0.0;
 	vec3 translucentTint = vec3(0.0);
+
+	if (projectedShadowPosition.z > 1.0 || projectedShadowPosition.z < 0.0) return 1.0;
 
 	#ifdef BASIC_SHADOW_FILTER
 		int samples = int(SHADOW_FILTER_SAMPLE_COUNT * 0.5);

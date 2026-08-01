@@ -317,7 +317,7 @@ void main() {
     endText(gl_FragColor.rgb);
   #endif
 
-  #if defined SHADER_GRASS_SETTING && MC_VERSION >= 260200 && defined IEXT_ENABLED
+  #if defined SHADER_GRASS_SETTING && MC_VERSION >= 260200 && defined IEXT_ENABLED && IRIS_VERSION <= 11102
   const float textSize2 = 4.0;
   beginText(ivec2(gl_FragCoord.xy/textSize2), ivec2(0.05*viewWidth/textSize2, 0.75*viewHeight/textSize2));
   text.fgCol = vec4(1.0, 0.0, 0.0, 1.0);
@@ -327,7 +327,7 @@ void main() {
   endText(gl_FragColor.rgb);
   #endif
 
-  #if MC_VERSION >= 260200 && !defined IEXT_ENABLED
+  #if MC_VERSION >= 260200 && !defined IEXT_ENABLED && IRIS_VERSION <= 11102
   const float textSize2 = 4.0;
   beginText(ivec2(gl_FragCoord.xy/textSize2), ivec2(0.05*viewWidth/textSize2, 0.75*viewHeight/textSize2));
   text.fgCol = vec4(1.0, 0.0, 0.0, 1.0);

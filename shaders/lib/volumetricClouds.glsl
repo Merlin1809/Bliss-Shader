@@ -841,16 +841,18 @@ vec4 raymarchCloud(
 						if (abs(shadowPos.x) < 1.0-0.5/2048. && abs(shadowPos.y) < 1.0-0.5/2048.){
 							shadowPos = shadowPos*vec3(0.5,0.5,0.5/6.0)+0.5;
 
-							#ifdef TRANSLUCENT_COLORED_SHADOWS
-								sh = vec3(texture(shadowtex0HW, shadowPos).x);
+							if (shadowPos.z < 1.0 && shadowPos.z > 0.0) {
+								#ifdef TRANSLUCENT_COLORED_SHADOWS
+									sh = vec3(texture(shadowtex0HW, shadowPos).x);
 
-								if(texture(shadowtex1HW, shadowPos).x > shadowPos.z && sh.x < 1.0){
-									vec4 translucentShadow = texture(shadowcolor0, shadowPos.xy);
-									if(translucentShadow.a < 0.9) sh = normalize(translucentShadow.rgb+0.0001);
-								}
-							#else
-								sh = vec3(texture(shadowtex0HW, shadowPos).x);
-							#endif
+									if(texture(shadowtex1HW, shadowPos).x > shadowPos.z && sh.x < 1.0){
+										vec4 translucentShadow = texture(shadowcolor0, shadowPos.xy);
+										if(translucentShadow.a < 0.9) sh = normalize(translucentShadow.rgb+0.0001);
+									}
+								#else
+									sh = vec3(texture(shadowtex0HW, shadowPos).x);
+								#endif
+							}
 						}
 					#else
 						const vec3 sh = vec3(1.0);

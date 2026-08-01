@@ -15,6 +15,10 @@ uniform float frameTimeCounter;
 	#include "/lib/oceans.glsl"
 #endif
 
+#if defined PHYSICSMOD_OCEAN_SHADER_V2
+	#include "/lib/oceans_v2.glsl"
+#endif
+
 /*
 !! DO NOT REMOVE !!
 This code is from Chocapic13' shaders
@@ -153,6 +157,18 @@ void main() {
     	// pass this to the fragment shader to fetch the texture there for per fragment normals
     	physics_localPosition = finalPosition.xyz;
 
+		vec3 position = mat3(gl_ModelViewMatrix) * vec3(finalPosition) + gl_ModelViewMatrix[3].xyz;
+	#elif defined PHYSICSMOD_OCEAN_SHADER_V2
+		// basic value to determine how shallow/far away from the shore the water is
+		physics_localWaviness = physics_waviness;
+		// transform gl_Vertex (since it is the raw mesh, i.e. not transformed yet)
+		float baseWaveHeight = physics_waveHeight(gl_Vertex.xz, PHYSICS_ITERATIONS_OFFSET, physics_localWaviness, physics_gameTime);
+		float rippleHeight = physics_rippleVertexHeight(gl_Vertex.xz);
+		vec4 finalPosition = vec4(gl_Vertex.x, gl_Vertex.y + baseWaveHeight + rippleHeight, gl_Vertex.z, gl_Vertex.w);
+		// pass this to the fragment shader to fetch the texture there for per fragment normals
+		physics_localPosition = finalPosition.xyz;
+		
+		// now use finalPosition instead of gl_Vertex
 		vec3 position = mat3(gl_ModelViewMatrix) * vec3(finalPosition) + gl_ModelViewMatrix[3].xyz;
 	#else
 		vec3 position = mat3(gl_ModelViewMatrix) * vec3(gl_Vertex) + gl_ModelViewMatrix[3].xyz;

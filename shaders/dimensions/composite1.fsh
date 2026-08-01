@@ -738,6 +738,8 @@ vec3 ComputeShadowMap_COLOR(in vec3 projectedShadowPosition, float distortFactor
 	vec3 shadowColor = vec3(0.0);
 	vec3 translucentTint = vec3(0.0);
 
+	if (projectedShadowPosition.z > 1.0 || projectedShadowPosition.z < 0.0) return vec3(1.0);
+
 	#ifdef BASIC_SHADOW_FILTER
 		int samples = SHADOW_FILTER_SAMPLE_COUNT;
 		float rdMul = (shadowBlockerDepth*distortFactor*d0k) * 0.3;
@@ -1589,7 +1591,7 @@ void main() {
 			const vec3 lpvPos = vec3(0.0);
 		#endif
 		
-		vec3 blockLightColor = doBlockLightLighting(vec3(TORCH_R,TORCH_G,TORCH_B), lightmap.x, feetPlayerPos, lpvPos, viewPos, isDHrange, blueNoise(), FlatNormals, hand);
+		vec3 blockLightColor = doBlockLightLighting(vec3(TORCH_R,TORCH_G,TORCH_B), lightmap.x, feetPlayerPos, lpvPos, viewPos, isDHrange, blueNoise(), FlatNormals, hand, opaqueParticles);
 		Indirect_lighting += blockLightColor;
 
 		vec4 flashLightSpecularData = vec4(0.0);

@@ -245,6 +245,10 @@ vec2 decodeVec2(float a){
 	#include "/lib/oceans.glsl"
 #endif
 
+#if defined PHYSICSMOD_OCEAN_SHADER_V2
+	#include "/lib/oceans_v2.glsl"
+#endif
+
 
 float interleaved_gradientNoise_temporal(){
 	#ifdef TAA
@@ -302,7 +306,7 @@ vec3 applyBump(mat3 tbnMatrix, vec3 bump, float mult, vec3 rippleBump){
 	float bumpmult = mult;
 	bump = bump * bumpmult + vec3(0.0f, 0.0f, 1.0f - bumpmult);
 
-	#if defined PHYSICSMOD_OCEAN_SHADER && defined PHYSICS_OCEAN
+	#if (defined PHYSICSMOD_OCEAN_SHADER && defined PHYSICS_OCEAN || defined PHYSICSMOD_OCEAN_SHADER_V2)
 		bump += 4.0 * rippleBump;
 	#endif
 	
@@ -425,6 +429,8 @@ float ComputeShadowMap(inout vec3 directLightColor, vec3 playerPos, float maxDis
 	
 	float shadowmap = 0.0;
 	vec3 translucentTint = vec3(0.0);
+
+	if (projectedShadowPosition.z > 1.0 || projectedShadowPosition.z < 0.0) return 1.0;
 
 	#ifdef BASIC_SHADOW_FILTER
 		int samples = int(SHADOW_FILTER_SAMPLE_COUNT * 0.5);
@@ -730,21 +736,26 @@ if (gl_FragCoord.x * texelSize.x < 1.0  && gl_FragCoord.y * texelSize.y < 1.0 )	
 	vec3 normal = normalMat.xyz; // in viewSpace
 	vec3 geoNormals = viewToWorld(normal).xyz; // for refractions
 
-	#if defined PHYSICSMOD_OCEAN_SHADER && defined PHYSICS_OCEAN
+	#if (defined PHYSICSMOD_OCEAN_SHADER && defined PHYSICS_OCEAN || defined PHYSICSMOD_OCEAN_SHADER_V2)
 		WavePixelData wave = physics_wavePixel(physics_localPosition.xz, physics_localWaviness, physics_iterationsNormal, physics_gameTime);
+		float physics_localWaviness_fade = smoothstep(0.0, 0.1, physics_localWaviness);
 		
-		#if defined DISTANT_HORIZONS
+		#if defined DISTANT_HORIZONS || defined VOXY
 			float PHYSICS_OCEAN_TRANSITION = 1.0-pow(1.0-pow(1.0-clamp(1.0-length(feetPlayerPos.xz)/max(far,0.0),0,1),5),5);
 		#else
 			float PHYSICS_OCEAN_TRANSITION = 0.0;
 		#endif
 
 		if (isWater){
+			vec3 nMat = normalMat.xyz;
+
 			if (!gl_FrontFacing) {
    			    wave.normal = -wave.normal;
+				nMat = -nMat;
    			}
 
 			normal = mix(normalize(gl_NormalMatrix * wave.normal), normal, PHYSICS_OCEAN_TRANSITION);
+			normal = mix(nMat, normal, physics_localWaviness_fade);
 			Albedo = mix(Albedo, vec3(1.0), wave.foam);
 			gl_FragData[0].a = mix(1.0/255.0, 1.0, wave.foam);
 		}
@@ -752,7 +763,7 @@ if (gl_FragCoord.x * texelSize.x < 1.0  && gl_FragCoord.y * texelSize.y < 1.0 )	
 
 	vec3 worldSpaceNormal = viewToWorld(normal).xyz;
 	
-	#if defined LARGE_WAVE_DISPLACEMENT && !defined PHYSICS_OCEAN
+	#if defined LARGE_WAVE_DISPLACEMENT && !defined PHYSICS_OCEAN && !defined PHYSICSMOD_OCEAN_SHADER_V2
 		if (isWater){
 			normal = largeWaveDisplacementNormal;
 		}
@@ -870,9 +881,9 @@ if (gl_FragCoord.x * texelSize.x < 1.0  && gl_FragCoord.y * texelSize.y < 1.0 )	
 	// tangent space normals for refraction
 	vec2 TangentNormal = NormalTex.xy;
 	
-	#if defined PHYSICSMOD_OCEAN_SHADER && defined PHYSICS_OCEAN
+	#if (defined PHYSICSMOD_OCEAN_SHADER && defined PHYSICS_OCEAN || defined PHYSICSMOD_OCEAN_SHADER_V2)
 		rippleBump *= physics_localWaviness;
-		float bumpmult = mix(isWater ? 1.0 : NORMAL_MAP_MULT, isWater ? PHYSICS_OCEAN_TRANSITION : NORMAL_MAP_MULT, smoothstep(0.0, 0.1, physics_localWaviness));
+		float bumpmult = mix(isWater ? 1.0 : NORMAL_MAP_MULT, isWater ? PHYSICS_OCEAN_TRANSITION : NORMAL_MAP_MULT, physics_localWaviness_fade);
 
 		normal = applyBump(tbnMatrix, NormalTex.xyz, bumpmult, rippleBump);
 	#else
@@ -881,8 +892,8 @@ if (gl_FragCoord.x * texelSize.x < 1.0  && gl_FragCoord.y * texelSize.y < 1.0 )	
 
 	worldSpaceNormal = viewToWorld(normal);
 	
-	#if defined PHYSICSMOD_OCEAN_SHADER && defined PHYSICS_OCEAN
-		if (isWater) TangentNormal = mix(NormalTex.xy, normalize(wave.normal).xz, smoothstep(0.0, 0.1, physics_localWaviness));
+	#if (defined PHYSICSMOD_OCEAN_SHADER && defined PHYSICS_OCEAN || defined PHYSICSMOD_OCEAN_SHADER_V2)
+		if (isWater) TangentNormal = mix(NormalTex.xy, normalize(wave.normal).xz, physics_localWaviness_fade);
 	#endif
 
 	gl_FragData[2].r = encodeVec2(TangentNormal*0.5+0.5);
@@ -1060,7 +1071,7 @@ if (gl_FragCoord.x * texelSize.x < 1.0  && gl_FragCoord.y * texelSize.y < 1.0 )	
 	#endif
 
 	#ifdef MAIN_SHADOW_PASS
-		Indirect_lighting += doBlockLightLighting(lightColor, lightmap.x, feetPlayerPos, lpvPos, viewPos, false, BN, worldSpaceNormal, false);
+		Indirect_lighting += doBlockLightLighting(lightColor, lightmap.x, feetPlayerPos, lpvPos, viewPos, false, BN, worldSpaceNormal, false, false);
 	#else
 		Indirect_lighting += doBlockLightLighting(lightColor, lightmap.x, feetPlayerPos, lpvPos);
 	#endif
