@@ -625,9 +625,6 @@ if (gl_FragCoord.x * texelSize.x < 1.0  && gl_FragCoord.y * texelSize.y < 1.0 )	
 	// 0.4 = translucent particles
 	// 0.3 = hand mask
 
-	#ifdef HAND
-		MATERIALS = 0.3;
-	#endif
 
 	// bool isHand = abs(MATERIALS - 0.1) < 0.01;
 	bool isWater = MATERIALS > 0.99;
@@ -635,6 +632,10 @@ if (gl_FragCoord.x * texelSize.x < 1.0  && gl_FragCoord.y * texelSize.y < 1.0 )	
 	bool isReflective = abs(MATERIALS - 0.1) < 0.01 || isWater || isReflectiveEntity;
 	bool isEntity = abs(MATERIALS - 0.4) < 0.01 || isReflectiveEntity;
 	// bool isNetherPortal =  abs(MATERIALS - 0.6) < 0.01;
+
+	#ifdef HAND
+		MATERIALS = 0.3;
+	#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////// ALBEDO /////////////////////////////////////
@@ -1120,12 +1121,14 @@ if (gl_FragCoord.x * texelSize.x < 1.0  && gl_FragCoord.y * texelSize.y < 1.0 )	
 
 		#ifdef HAND
 			isHand = true;
-			f0 = max(specularValues.g, harcodedF0);
+			// f0 = max(specularValues.g, harcodedF0);
 		#endif
 		
 		float roughness = specularValues.r; 
 
 		if(UnchangedAlpha <= 0.0 && !isReflective) f0 = 0.0;
+
+		if(SpecularTex.g == 0.0 && SpecularTex.r > 0.0) f0 = harcodedF0;
 
 		if (f0 > 0.0){
 			if(isReflective) f0 = max(f0, harcodedF0);

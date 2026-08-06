@@ -2337,6 +2337,8 @@ vec3 specularReflections(
 	mat3 basis = CoordBase(normal);
 	vec3 viewDir = -NplayerPos*basis;
 
+	viewDir.z = abs(viewDir.z);
+
 	#if defined FORWARD_ROUGH_REFLECTION || defined DEFERRED_ROUGH_REFLECTION
 		vec3 samplePoints = SampleVNDFGGX(viewDir, roughness, noise.xy);
 		vec3 reflectedVector_L = basis * reflect(-normalize(viewDir), samplePoints);
