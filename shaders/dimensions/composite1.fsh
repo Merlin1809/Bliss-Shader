@@ -871,8 +871,8 @@ uniform float wetness;
 
 				vec2 driprate = vec2(0.0,frameTimeCounter)*0.05;
 
-				vec2 UV = mix(worldPos.xz, worldPos.xy*vec2(2.0, 0.5)+driprate, abs(flatNormals.z));
-				UV = mix(UV, worldPos.zy*vec2(2.0, 0.5)+driprate, abs(flatNormals.x));
+				vec2 UV = mix(worldPos.xz, worldPos.xy*vec2(2.0, 0.5)+driprate, pow(abs(flatNormals.z),2));
+				UV = mix(UV, worldPos.zy*vec2(2.0, 0.5)+driprate, pow(abs(flatNormals.x),2));
 
 				#ifdef SHADER_GRASS
 				if(isShaderGrass) UV = worldPos.xz;
@@ -984,10 +984,14 @@ float encodeVec2(float x,float y){
     return encodeVec2(vec2(x,y));
 }
 
+vec2 signNotZero(vec2 v) {
+    return step(vec2(0.0), v) * 2.0 - 1.0;
+}
+
 vec2 encodeNormal(vec3 n){
 	n.xy = n.xy / dot(abs(n), vec3(1.0));
-	n.xy = n.z <= 0.0 ? (1.0 - abs(n.yx)) * sign(n.xy) : n.xy;
-    vec2 encn = clamp(n.xy * 0.5 + 0.5,-1.0,1.0);
+	n.xy = n.z <= 0.0 ? (1.0 - abs(n.yx)) * signNotZero(n.xy) : n.xy;
+    vec2 encn = clamp(n.xy * 0.5 + 0.5,0.0,1.0);
 	
     return encn;
 }

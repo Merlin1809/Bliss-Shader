@@ -490,7 +490,7 @@ void main() {
       vec2 lightmap = dataUnpacked1.yz;
 
       vec4 stuff = texelFetch(colortex8, ivec2(gl_FragCoord.xy), 0);
-      vec3 normal = decode(stuff.xy);
+      vec3 normal = normalize(decode(stuff.xy));
       vec2 speculars = stuff.zw;
 
       float roughness = speculars.r;
@@ -505,6 +505,8 @@ void main() {
       // get reflected vector
       mat3 basis = CoordBase(normal);
       vec3 viewDir = -NplayerPos*basis;
+      viewDir.z = abs(viewDir.z);
+
       float VdotN = dot(-normalize(viewDir), vec3(0.0,0.0,1.0));
       float shlickFresnel = shlickFresnelRoughness(VdotN, roughness);
 
