@@ -1,6 +1,6 @@
 option.SHADER_VERSION_LABEL = §d§lECLIPSE§r - Bliss 编辑版
     prefix.SHADER_VERSION_LABEL = 版本
-    value.SHADER_VERSION_LABEL.482 = 8.3.2
+    value.SHADER_VERSION_LABEL.482 = 8.3.3
 
 # 如果你是来翻译的，这不是玩笑，这些选项的功能正如其名
 profile.POTATO=§4土豆 (极低配置)

@@ -1074,7 +1074,7 @@ if (gl_FragCoord.x * texelSize.x < 1.0  && gl_FragCoord.y * texelSize.y < 1.0 )	
 	#ifdef MAIN_SHADOW_PASS
 		Indirect_lighting += doBlockLightLighting(lightColor, lightmap.x, feetPlayerPos, lpvPos, viewPos, false, BN, worldSpaceNormal, false, false);
 	#else
-		Indirect_lighting += doBlockLightLighting(lightColor, lightmap.x, feetPlayerPos, lpvPos);
+		Indirect_lighting += doBlockLightLighting(lightColor, lightmap.x, feetPlayerPos, lpvPos, false);
 	#endif
 	
 	vec4 flashLightSpecularData = vec4(0.0);
