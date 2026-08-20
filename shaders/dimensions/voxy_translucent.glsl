@@ -296,7 +296,7 @@ if (gl_FragCoord.x * texelSize.x < 1.0  && gl_FragCoord.y * texelSize.y < 1.0 )	
 
 	vec3 lightColor = vec3(TORCH_R,TORCH_G,TORCH_B);
 	const vec3 lpvPos = vec3(0.0);
-	Indirect_lighting += doBlockLightLighting(lightColor, parameters.lightMap.x * 0.8, feetPlayerPos, lpvPos);
+	Indirect_lighting += doBlockLightLighting(lightColor, parameters.lightMap.x * 0.8, feetPlayerPos, lpvPos, false);
 
 	vec3 FinalColor = (Indirect_lighting + Direct_lighting*indoors) * Albedo;
 	
