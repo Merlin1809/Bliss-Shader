@@ -258,6 +258,7 @@ void main() {
 	#if defined ENTITIES && defined IS_IRIS
 		NAMETAG = 0;
 		if (entityId == 1600) NAMETAG = 1;
+		else if (entityId == 1615) NAMETAG = 2;
 	#endif
 	
 

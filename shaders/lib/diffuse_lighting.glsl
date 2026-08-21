@@ -108,7 +108,8 @@ vec3 doBlockLightLighting(
     , vec3 viewPos, bool depthCheck, float noise, vec3 normals, bool hand
     #endif
 
-    , bool patricles
+    , bool glowframe
+    , bool particles
 ){
     lightmap = clamp(lightmap,0.0,1.0);
 
@@ -128,7 +129,12 @@ vec3 doBlockLightLighting(
             lpvSample.rgb *= lightmapCurve;
         #endif
 
-        if(patricles) lpvSample.rgb += lightmapCurve;
+        if(particles) {
+            float luma = dot(lpvSample.rgb,vec3(0.21, 0.72, 0.07));
+            lpvSample.rgb += lightmapCurve * (1.0 - clamp(luma * 2.0, 0.0, 1.0));
+        } 
+        else if(glowframe) lpvSample.rgb += lightmapCurve * (1.0 - lightmap);
+
         // vec3 lpvBlockLight = GetLpvBlockLight(lpvSample);
 
         // create a smooth falloff at the edges of the voxel volume.

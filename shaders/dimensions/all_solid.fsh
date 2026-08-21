@@ -442,7 +442,7 @@ void main() {
 
 	#ifdef ENTITIES
 		// disallow POM to work on item frames.
-		SIGN = data_in.blockID == ENTITY_ITEM_FRAME;
+		SIGN = data_in.blockID == ENTITY_ITEM_FRAME || data_in.blockID == ENTITY_GLOW_ITEM_FRAME;
 	#else
 		SIGN = data_in.blockID == BLOCK_SIGN;
 	#endif
@@ -550,6 +550,8 @@ void main() {
 
 	float opaqueMasks = 1.0;
 
+	vec2 lmcoord = data_in.lmtexcoord.zw;
+
 	#ifdef HAND
 		opaqueMasks = 0.75;
 	#else
@@ -559,7 +561,8 @@ void main() {
 		#endif
 
 		#if defined ENTITIES
-			opaqueMasks = 0.45;
+		if (data_in.blockID == ENTITY_GLOW_ITEM_FRAME) {opaqueMasks = 0.9; lmcoord.x = min(lmcoord.x, 0.925);}
+		else opaqueMasks = 0.45;
 		#endif
 
 		#if !defined BLOCKENTITIES && !defined ENTITIES && defined SHADER_GRASS && !defined COLORWHEEL && !defined HAND && !defined CUTOUT
@@ -573,8 +576,6 @@ void main() {
 	//////////////////////////////// 				//////////////////////////////// 
 
 	float textureLOD = bias();
-
-	vec2 lmcoord = data_in.lmtexcoord.zw;
 
 	vec4 Color = data_in.color;
 

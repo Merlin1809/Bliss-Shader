@@ -1145,7 +1145,8 @@ void main() {
 			const float POM_DEEPNESS = 0.0;
 		#endif
 		// bool handwater = abs(translucentMasks-0.3) < 0.01 ;
-		bool opaqueParticles = abs(opaqueMasks-0.85) <0.01;
+		bool opaqueParticles = abs(opaqueMasks-0.85) < 0.01;
+		bool glowframe = abs(opaqueMasks-0.9) < 0.01;
 
 		if(hand){
 			convertHandDepth(z);
@@ -1595,7 +1596,7 @@ void main() {
 			const vec3 lpvPos = vec3(0.0);
 		#endif
 		
-		vec3 blockLightColor = doBlockLightLighting(vec3(TORCH_R,TORCH_G,TORCH_B), lightmap.x, feetPlayerPos, lpvPos, viewPos, isDHrange, blueNoise(), FlatNormals, hand, opaqueParticles);
+		vec3 blockLightColor = doBlockLightLighting(vec3(TORCH_R,TORCH_G,TORCH_B), lightmap.x, feetPlayerPos, lpvPos, viewPos, isDHrange, blueNoise(), FlatNormals, hand, glowframe, opaqueParticles);
 		Indirect_lighting += blockLightColor;
 
 		vec4 flashLightSpecularData = vec4(0.0);

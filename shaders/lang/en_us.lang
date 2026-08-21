@@ -1,6 +1,6 @@
 option.SHADER_VERSION_LABEL = §d§lECLIPSE§r - A Bliss Edit
     prefix.SHADER_VERSION_LABEL = V
-    value.SHADER_VERSION_LABEL.482 = 8.3.3
+    value.SHADER_VERSION_LABEL.482 = 8.3.4
 
 iris_extension.keybind.key0.name=Flashlight
 

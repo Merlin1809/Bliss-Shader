@@ -906,7 +906,7 @@ if (gl_FragCoord.x * texelSize.x < 1.0  && gl_FragCoord.y * texelSize.y < 1.0 )	
 	} else {
 		#if defined ENTITIES && defined IS_IRIS
 			float nameTagMask = 0.0;
-			if(NAMETAG > 0) nameTagMask = 1.0;
+			if(NAMETAG == 1) nameTagMask = 1.0;
 		#else
 			const float nameTagMask = 0.0;
 		#endif
@@ -1071,10 +1071,17 @@ if (gl_FragCoord.x * texelSize.x < 1.0  && gl_FragCoord.y * texelSize.y < 1.0 )	
 		vec3 lightColor = vec3(TORCH_R,TORCH_G,TORCH_B);
 	#endif
 
-	#ifdef MAIN_SHADOW_PASS
-		Indirect_lighting += doBlockLightLighting(lightColor, lightmap.x, feetPlayerPos, lpvPos, viewPos, false, BN, worldSpaceNormal, false, false);
+	#if defined ENTITIES && defined IS_IRIS
+		bool glowframe = NAMETAG == 2;
+		if(glowframe) lightmap.x = min(lightmap.x, 0.925);
 	#else
-		Indirect_lighting += doBlockLightLighting(lightColor, lightmap.x, feetPlayerPos, lpvPos, false);
+		const bool glowframe = false;
+	#endif
+
+	#ifdef MAIN_SHADOW_PASS
+		Indirect_lighting += doBlockLightLighting(lightColor, lightmap.x, feetPlayerPos, lpvPos, viewPos, false, BN, worldSpaceNormal, false, glowframe, false);
+	#else
+		Indirect_lighting += doBlockLightLighting(lightColor, lightmap.x, feetPlayerPos, lpvPos, glowframe, false);
 	#endif
 	
 	vec4 flashLightSpecularData = vec4(0.0);
@@ -1201,7 +1208,7 @@ if (gl_FragCoord.x * texelSize.x < 1.0  && gl_FragCoord.y * texelSize.y < 1.0 )	
 	gl_FragData[3] = vec4(1, 1, encodeVec2(lightmap.x, lightmap.y), 1);
 
 	#if defined ENTITIES && defined IS_IRIS && !defined COLORWHEEL
-		if(NAMETAG > 0) {
+		if(NAMETAG == 1) {
 			//  WHY DO THEY HAVE TO AHVE LIGHTING AAAAAAUGHAUHGUAHG
 			#ifndef OVERWORLD_SHADER
 				lightmap.y = 0.0;
