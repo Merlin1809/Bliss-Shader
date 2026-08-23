@@ -56,6 +56,10 @@ layout (local_size_x = 8, local_size_y = 8, local_size_z = 8) in;
 
         uint blockId = imageLoad(imgVoxelMask, voxelPos).r;
 
+        #ifdef BEACON_FLOODFILL
+            if(blockId >= 50000u) return blockId;
+        #endif
+
         blockId = blockId % 2000u;
 
         #if IRIS_VERSION < 11004
@@ -79,7 +83,7 @@ layout (local_size_x = 8, local_size_y = 8, local_size_z = 8) in;
         uint mask = 0xFFFF;
         uint blockId = voxelSharedData[shared_index];
         
-        if (blockId > 0 && blockId != BLOCK_EMPTY) {
+        if (blockId > 0 && blockId < 2048) {
             uvec2 blockData = imageLoad(imgBlockData, int(blockId)).rg;
             mask = (blockData.g >> 24) & 0xFFFF;
         }
@@ -103,6 +107,17 @@ layout (local_size_x = 8, local_size_y = 8, local_size_z = 8) in;
     }
 #endif
 
+vec3 UnpackColor(uint packedC) {
+    int idx = int(packedC) - 50000;
+
+    int b = idx % 101;
+    idx /= 101;
+    int g = idx % 101;
+    idx /= 101;
+    int r = idx % 101;
+
+    return vec3(r / 100.0, g / 100.0, b / 100.0);
+}
 
 ////////////////////////////// VOID MAIN //////////////////////////////
 
@@ -136,7 +151,7 @@ void main() {
         // Decode light data for current voxel
         uint blockId = voxelSharedData[getSharedIndex(ivec3(gl_LocalInvocationID) + 1)];
 
-        if (blockId > 0u) {
+        if (blockId > 0u && blockId < 2048u) {
             uvec2 blockData = imageLoad(imgBlockData, int(blockId)).rg;
             vec4 lightColorRange = unpackUnorm4x8(blockData.r);
             lightColor = srgbToLinear(lightColorRange.rgb);
@@ -145,6 +160,15 @@ void main() {
             tintColor = srgbToLinear(tintColorMask.rgb);
             mixMask = (blockData.g >> 24) & 0xFFFF;
         }
+        #ifdef BEACON_FLOODFILL
+        else if(blockId >= 50000u) {
+            lightColor = BEACON_FLOODFILL_BRIGHTNESS * 17.0 * srgbToLinear(UnpackColor(blockId));
+
+            lightRange = 0.0425 * 255.0;
+            tintColor = vec3(1.0);
+            mixMask = 0xFFFF;
+        }
+        #endif
 
         // Mix neighbor voxel light values
         if (any(greaterThan(tintColor, vec3(0.0)))) {
@@ -156,7 +180,12 @@ void main() {
         // Add light for current voxel
         if (lightRange > 0.0) {
             vec3 hsv = RgbToHsv(lightColor);
-            hsv.z = exp2(lightRange) - 1.0;
+            #ifdef BEACON_FLOODFILL
+            if(blockId < 50000u)
+            #endif
+            {
+                hsv.z = exp2(lightRange) - 1.0;
+            }
             lightValue.rgb += HsvToRgb(hsv);
         }
 

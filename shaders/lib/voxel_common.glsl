@@ -1,12 +1,20 @@
 #ifdef RENDER_SHADOW
-	layout(r16ui) uniform uimage3D imgVoxelMask;
+	#if defined BEACON_FLOODFILL && defined IS_LPV_ENABLED
+		layout(r32ui) uniform uimage3D imgVoxelMask;
+	#else
+		layout(r16ui) uniform uimage3D imgVoxelMask;
+	#endif
 	// layout(r8ui) uniform uimage3D imgQuarterVoxelMask;
 // 
 	// layout(std430, binding = 5) buffer voxelSSBO {
 	// 	vec4[6] voxelData[];
 	// };  
 #else
-	layout(r16ui) uniform readonly uimage3D imgVoxelMask;
+	#if defined BEACON_FLOODFILL && defined IS_LPV_ENABLED
+		layout(r32ui) uniform readonly uimage3D imgVoxelMask;
+	#else
+		layout(r16ui) uniform readonly uimage3D imgVoxelMask;
+	#endif
 	// layout(r8ui) uniform readonly uimage3D imgQuarterVoxelMask;
 // 
 	// layout(std430, binding = 5) readonly buffer voxelSSBO {

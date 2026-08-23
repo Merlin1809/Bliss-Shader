@@ -1,6 +1,6 @@
 option.SHADER_VERSION_LABEL = §d§lECLIPSE§r - A Bliss Edit
     prefix.SHADER_VERSION_LABEL = V
-    value.SHADER_VERSION_LABEL.482 = 8.3.4
+    value.SHADER_VERSION_LABEL.482 = 8.4.0
 
 iris_extension.keybind.key0.name=Flashlight
 
@@ -260,6 +260,11 @@ screen.Direct_Light = Direct Light
             value.LPV_HANDHELD_SHADOWS_QUALITY.1 = High
         option.HANDHELD_LIGHT_REFLECTIONS = Handheld Lights in Reflections
             suffix.HANDHELD_LIGHT_REFLECTIONS=%
+        option.BEACON_FLOODFILL = Beacon Beam Floodfill
+            option.BEACON_FLOODFILL.comment = Whether Beacon Beams should emit colored lighting. §aPERFORMANCE COST:§r Low
+        option.BEACON_FLOODFILL_BRIGHTNESS = Beacon Beam Floodfill Brightness
+            suffix.BEACON_FLOODFILL_BRIGHTNESS=%
+
 
 
 screen.Ambient_light = Ambient Light

@@ -10,6 +10,11 @@ const vec2 LpvBlockSkyRange = vec2(15.0, 24.0);
 #endif
 
 vec3 GetLpvPosition(const in vec3 playerPos) {
+    vec3 cameraOffset = cameraPosition - floor(previousCameraPosition);
+    return playerPos + cameraOffset + LpvSize3/2u;
+}
+
+vec3 GetLpvPosition2(const in vec3 playerPos) {
     #if !defined IS_LPV_ENABLED && !defined SHADER_GRASS
 	    vec3 cameraOffset = fract(cameraPosition-relativeEyePosition);
     #else

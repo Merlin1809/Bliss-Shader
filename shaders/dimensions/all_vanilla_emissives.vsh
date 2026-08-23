@@ -41,25 +41,25 @@ void main() {
 
 	vec3 position = mat3(gl_ModelViewMatrix) * vec3(gl_Vertex) + gl_ModelViewMatrix[3].xyz;
 
-	vec3 worldpos = mat3(gbufferModelViewInverse) * position + gbufferModelViewInverse[3].xyz;
+	vec3 playerPos = mat3(gbufferModelViewInverse) * position + gbufferModelViewInverse[3].xyz;
 
 	#if defined PLANET_CURVATURE
-		float curvature = length(worldpos.xz) / (16.0*8.0);
-		worldpos.y -= curvature*curvature * CURVATURE_AMOUNT;
+		float curvature = length(playerPos.xz) / (16.0*8.0);
+		playerPos.y -= curvature*curvature * CURVATURE_AMOUNT;
 	#endif
-
-	position = mat3(gbufferModelView) * worldpos + gbufferModelView[3].xyz;
-
-	gl_Position = toClipSpace3(position);
 
 	#ifdef BEACON_BEAM
-		if(gl_Color.a < 1.0) gl_Position = vec4(10,10,10,0);
-	#endif
+		gl_Position = vec4(playerPos, 1.0);
+	#else
+		position = mat3(gbufferModelView) * playerPos + gbufferModelView[3].xyz;
 
-	#ifdef TAA_UPSCALING
-		gl_Position.xy = gl_Position.xy * RENDER_SCALE + RENDER_SCALE * gl_Position.w - gl_Position.w;
-	#endif
-	#ifdef TAA
-	    gl_Position.xy += offsets[framemod8] * gl_Position.w*texelSize;
+		gl_Position = toClipSpace3(position);
+
+		#ifdef TAA_UPSCALING
+			gl_Position.xy = gl_Position.xy * RENDER_SCALE + RENDER_SCALE * gl_Position.w - gl_Position.w;
+		#endif
+		#ifdef TAA
+			gl_Position.xy += offsets[framemod8] * gl_Position.w*texelSize;
+		#endif
 	#endif
 }

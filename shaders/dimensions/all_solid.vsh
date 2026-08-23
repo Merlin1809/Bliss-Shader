@@ -334,7 +334,7 @@ void main() {
 
 					data_out.centerPosition = worldpos + at_midBlock.xyz / 64.0;
 
-					vec3 LPVpos = GetLpvPosition(data_out.centerPosition);
+					vec3 LPVpos = GetLpvPosition2(data_out.centerPosition);
 
 					#if REPLACE_SHORT_GRASS > 0
 						uint blockTop = GetVoxelBlock(ivec3(LPVpos.x, LPVpos.y + 0.6, LPVpos.z));
@@ -504,7 +504,7 @@ void main() {
 
 		if(length(worldpos) < maxShortGrassRange && data_out.blockID == 12) {
 			vec3 centerPosition = worldpos + at_midBlock.xyz / 64.0;
-			vec3 LPVpos = GetLpvPosition(centerPosition);
+			vec3 LPVpos = GetLpvPosition2(centerPosition);
 			uint blockBelow = GetVoxelBlock(ivec3(LPVpos.x, LPVpos.y - 0.6, LPVpos.z));
 			if(blockBelow == 85) gl_Position.z -= 10000.0;
 		}

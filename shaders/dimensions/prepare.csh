@@ -3,6 +3,8 @@ layout (local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
 
 const ivec3 workGroups = ivec3(1, 1, 1);
 
+uniform vec3 previousCameraPosition;
+
 #include "/lib/util.glsl"
 uniform vec3 cameraPosition;
 uniform vec3 relativeEyePosition;
@@ -75,7 +77,7 @@ void main() {
             #else
                 vec3 rayStart = vec3(-relativeEyePosition);
             #endif
-            vec3 LPVpos = GetLpvPosition(rayStart);
+            vec3 LPVpos = GetLpvPosition2(rayStart);
             uint BlockID1 = GetVoxelBlock(ivec3(LPVpos));
             uint BlockID2 = GetVoxelBlock(ivec3(LPVpos.x, LPVpos.y - 0.5*playerTallness, LPVpos.z));
             uint BlockID3 = GetVoxelBlock(ivec3(LPVpos.x, LPVpos.y - playerTallness, LPVpos.z));

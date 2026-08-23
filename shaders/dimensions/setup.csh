@@ -117,8 +117,8 @@ void main() {
         }
 
         if (blockId == BLOCK_BEACON || blockId == ITEM_BEACON) {
-            lightColor = vec3(1.0);
-            lightRange = 15.0;
+            lightColor = vec3(0.7, 0.85, 1.0);
+            lightRange = 10.0;
         }
 
         if (blockId == BLOCK_BREWING_STAND) {

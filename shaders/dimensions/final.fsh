@@ -318,37 +318,37 @@ void main() {
   #endif
 
   #if defined SHADER_GRASS_SETTING && MC_VERSION >= 260200 && defined IEXT_ENABLED && IRIS_VERSION <= 11102
-  const float textSize2 = 4.0;
-  beginText(ivec2(gl_FragCoord.xy/textSize2), ivec2(0.05*viewWidth/textSize2, 0.75*viewHeight/textSize2));
-  text.fgCol = vec4(1.0, 0.0, 0.0, 1.0);
-  printString((_S, _h, _a, _d, _e, _r, _space, _G, _r, _a, _s, _s, _space, _i, _s, _space, _b, _r, _o, _k, _e, _n, _space, _o, _n, _space, _2, _6, _dot, _2, _space, _o, _r, _space, _h, _i, _g, _h, _e, _r, _exclm));
-  printLine();
-  printString((_D, _i, _s, _a, _b, _l, _e, _space, _i, _t, _exclm));
-  endText(gl_FragColor.rgb);
+    const float textSize2 = 4.0;
+    beginText(ivec2(gl_FragCoord.xy/textSize2), ivec2(0.05*viewWidth/textSize2, 0.75*viewHeight/textSize2));
+    text.fgCol = vec4(1.0, 0.0, 0.0, 1.0);
+    printString((_S, _h, _a, _d, _e, _r, _space, _G, _r, _a, _s, _s, _space, _i, _s, _space, _b, _r, _o, _k, _e, _n, _space, _o, _n, _space, _2, _6, _dot, _2, _space, _o, _r, _space, _h, _i, _g, _h, _e, _r, _exclm));
+    printLine();
+    printString((_D, _i, _s, _a, _b, _l, _e, _space, _i, _t, _exclm));
+    endText(gl_FragColor.rgb);
   #endif
 
   #if MC_VERSION >= 260200 && !defined IEXT_ENABLED && IRIS_VERSION <= 11102
-  const float textSize2 = 4.0;
-  beginText(ivec2(gl_FragCoord.xy/textSize2), ivec2(0.05*viewWidth/textSize2, 0.75*viewHeight/textSize2));
-  text.fgCol = vec4(1.0, 0.0, 0.0, 1.0);
-  printString((_T, _h, _e, _space, _i, _n, _v, _i, _s, _i, _b, _l, _e, _space, _t, _e, _r, _r, _a, _i, _n, _space, _i, _s, _space, _a, _n, _space, _I, _r, _i, _s, _space, _b, _u, _g, _exclm));
-  printLine();
-  printLine();
-  printString((_I, _n, _s, _t, _a, _l, _l, _space, _m, _y, _space));
-  text.fgCol = vec4(0.0, 1.0, 0.0, 1.0);
-  printString((_I, _r, _i, _s, _space, _E, _x, _t, _e, _n, _s, _i, _o, _n));
-  text.fgCol = vec4(1.0, 0.0, 0.0, 1.0);
-  printString((_space, _m, _o, _d, _space, _t, _o, _space, _f, _i, _x, _space, _i, _t, _exclm));
-  endText(gl_FragColor.rgb);
+    const float textSize2 = 4.0;
+    beginText(ivec2(gl_FragCoord.xy/textSize2), ivec2(0.05*viewWidth/textSize2, 0.75*viewHeight/textSize2));
+    text.fgCol = vec4(1.0, 0.0, 0.0, 1.0);
+    printString((_T, _h, _e, _space, _i, _n, _v, _i, _s, _i, _b, _l, _e, _space, _t, _e, _r, _r, _a, _i, _n, _space, _i, _s, _space, _a, _n, _space, _I, _r, _i, _s, _space, _b, _u, _g, _exclm));
+    printLine();
+    printLine();
+    printString((_I, _n, _s, _t, _a, _l, _l, _space, _m, _y, _space));
+    text.fgCol = vec4(0.0, 1.0, 0.0, 1.0);
+    printString((_I, _r, _i, _s, _space, _E, _x, _t, _e, _n, _s, _i, _o, _n));
+    text.fgCol = vec4(1.0, 0.0, 0.0, 1.0);
+    printString((_space, _m, _o, _d, _space, _t, _o, _space, _f, _i, _x, _space, _i, _t, _exclm));
+    endText(gl_FragColor.rgb);
   #endif
 
-#if defined SHADER_GRASS_SETTING && defined CREATE_AERONAUTICS
-  const float textSize3 = 4.0;
-  beginText(ivec2(gl_FragCoord.xy/textSize3), ivec2(0.05*viewWidth/textSize3, 0.75*viewHeight/textSize3));
-  text.fgCol = vec4(1.0, 0.0, 0.0, 1.0);
-  printString((_S, _h, _a, _d, _e, _r, _space, _G, _r, _a, _s, _s, _space, _i, _s, _space, _b, _r, _o, _k, _e, _n, _space, _b, _y, _space, _C, _r, _e, _a, _t, _e, _space, _A, _e, _r, _o, _n, _a, _u, _t, _i, _c, _s, _exclm));
-  printLine();
-  printString((_D, _i, _s, _a, _b, _l, _e, _space, _i, _t, _exclm));
-  endText(gl_FragColor.rgb);
-#endif
+  #if defined SHADER_GRASS_SETTING && defined CREATE_AERONAUTICS
+    const float textSize3 = 4.0;
+    beginText(ivec2(gl_FragCoord.xy/textSize3), ivec2(0.05*viewWidth/textSize3, 0.75*viewHeight/textSize3));
+    text.fgCol = vec4(1.0, 0.0, 0.0, 1.0);
+    printString((_S, _h, _a, _d, _e, _r, _space, _G, _r, _a, _s, _s, _space, _i, _s, _space, _b, _r, _o, _k, _e, _n, _space, _b, _y, _space, _C, _r, _e, _a, _t, _e, _space, _A, _e, _r, _o, _n, _a, _u, _t, _i, _c, _s, _exclm));
+    printLine();
+    printString((_D, _i, _s, _a, _b, _l, _e, _space, _i, _t, _exclm));
+    endText(gl_FragColor.rgb);
+  #endif
 }
