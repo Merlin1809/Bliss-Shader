@@ -1372,7 +1372,7 @@ const vec3 aerochrome_color = mix(vec3(1.0, 0.0, 0.0), vec3(0.715, 0.303, 0.631)
 	#undef SHADER_GRASS
 #endif
 
-#if defined CREATE_AERONAUTICS || MC_VERSION >= 260200
+#if defined CREATE_AERONAUTICS || MC_VERSION >= 260200 && IRIS_VERSION <= 11101
 	#undef SHADER_GRASS
 #endif
 
