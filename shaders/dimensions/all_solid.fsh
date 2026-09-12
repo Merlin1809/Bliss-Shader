@@ -1039,6 +1039,10 @@ void main() {
 		#if SSS_TYPE == 3		
 			OutSpecular.b = SpecularTex.b;
 		#endif
+
+		#if SSS_TYPE != 0
+			if(data_in.blockID == 829925) OutSpecular.b = 1.0;
+		#endif
 	#endif
 
 	// hit glow effect...
