@@ -90,6 +90,9 @@ uniform float viewWidth;
 uniform int hideGUI;
 uniform float screenBrightness;
 uniform int isEyeInWater;
+uniform float rainStrength;
+uniform int worldTime;
+uniform vec3 previousCameraPosition;
 
 // in vec3 at_velocity;
 // out vec3 velocity;
@@ -103,7 +106,6 @@ uniform vec2 texelSize;
 
 #if defined HAND
 	uniform mat4 gbufferPreviousModelView;
-	uniform vec3 previousCameraPosition;
 
 	float detectCameraMovement(){
 		// simply get the difference of modelview matrices and cameraPosition across a frame.

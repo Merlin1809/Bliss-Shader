@@ -336,6 +336,15 @@ if (gl_FragCoord.x * texelSize.x < 1.0  && gl_FragCoord.y * texelSize.y < 1.0 )	
     
 
     gl_FragData[0] = gcolor;
+
+	#ifdef DISTANT_HORIZONS_TEXTURES
+    if (dh_hasTexture()) {
+        vec4 that = dh_sampleTexture();
+        vec3 clampedColor = clamp(gl_FragData[0].rgb * (that.rgb * 2.0), 0.0, 1.0);
+        gl_FragData[0].rgb = mix(gl_FragData[0].rgb, clampedColor, that.a);
+    }
+   #endif
+
     float UnchangedAlpha = gl_FragData[0].a;
 
 	#ifdef WhiteWorld

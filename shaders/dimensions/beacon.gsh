@@ -110,10 +110,11 @@ void main() {
                         int blocks = int(yEnd - yStart - 0.5);
                         vec4 vcolor = data_in[bottomIndex].color;
                         vec3 color = vcolor.rgb * vcolor.rgb;
+                        int packedColor = packColor(color);
 
                         int j;
                         for (j = 0; j < blocks; j++) {
-                            SetVoxelBlock(voxelPos, packColor(color));
+                            SetVoxelBlock(voxelPos, packedColor);
                             voxelPos.y += 1;
                             if(voxelPos.y > int(VoxelSize) - 1) break;
                         }
@@ -125,17 +126,15 @@ void main() {
 
     int i;
     for (i = 0; i < 3; i++) {
-		vec4 vertex = gl_in[i].gl_Position;
+		vec3 vertex = gl_in[i].gl_Position.xyz;
 
         data_out.color = data_in[i].color;
 
         data_out.texcoord = data_in[i].texcoord;
 
-        gl_Position = vertex;
+        vertex = mat3(gbufferModelView) * vertex + gbufferModelView[3].xyz;
 
-        vertex.rgb = mat3(gbufferModelView) * vertex.rgb + gbufferModelView[3].xyz;
-
-		gl_Position = toClipSpace3(vertex.rgb);
+		gl_Position = toClipSpace3(vertex);
 
 
         if(data_in[i].color.a < 1.0) gl_Position = vec4(10,10,10,0);

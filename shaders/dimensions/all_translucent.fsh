@@ -306,7 +306,7 @@ vec3 applyBump(mat3 tbnMatrix, vec3 bump, float mult, vec3 rippleBump){
 	float bumpmult = mult;
 	bump = bump * bumpmult + vec3(0.0f, 0.0f, 1.0f - bumpmult);
 
-	#if (defined PHYSICSMOD_OCEAN_SHADER && defined PHYSICS_OCEAN || defined PHYSICSMOD_OCEAN_SHADER_V2)
+	#if (defined PHYSICSMOD_OCEAN_SHADER && defined PHYSICS_OCEAN || defined PHYSICSMOD_OCEAN_SHADER_V2 || defined PHYSICS_OCEAN_V3)
 		bump += 4.0 * rippleBump;
 	#endif
 	
@@ -737,8 +737,19 @@ if (gl_FragCoord.x * texelSize.x < 1.0  && gl_FragCoord.y * texelSize.y < 1.0 )	
 	vec3 normal = normalMat.xyz; // in viewSpace
 	vec3 geoNormals = viewToWorld(normal).xyz; // for refractions
 
-	#if (defined PHYSICSMOD_OCEAN_SHADER && defined PHYSICS_OCEAN || defined PHYSICSMOD_OCEAN_SHADER_V2)
-		WavePixelData wave = physics_wavePixel(physics_localPosition.xz, physics_localWaviness, physics_iterationsNormal, physics_gameTime);
+	#if (defined PHYSICSMOD_OCEAN_SHADER && defined PHYSICS_OCEAN || defined PHYSICSMOD_OCEAN_SHADER_V2 || defined PHYSICS_OCEAN_V3)
+		vec3 waveNormal;
+		float waveFoam;
+		#ifdef PHYSICS_OCEAN_V3
+			PhysicsOceanData ocean = physics_oceanFragment();
+			waveNormal = ocean.normal;
+			waveFoam = ocean.foam;
+		#else
+			WavePixelData wave = physics_wavePixel(physics_localPosition.xz, physics_localWaviness, physics_iterationsNormal, physics_gameTime);
+			waveNormal = wave.normal;
+			waveFoam = wave.foam;
+		#endif
+		
 		float physics_localWaviness_fade = smoothstep(0.0, 0.1, physics_localWaviness);
 		
 		#if defined DISTANT_HORIZONS || defined VOXY
@@ -751,20 +762,20 @@ if (gl_FragCoord.x * texelSize.x < 1.0  && gl_FragCoord.y * texelSize.y < 1.0 )	
 			vec3 nMat = normalMat.xyz;
 
 			if (!gl_FrontFacing) {
-   			    wave.normal = -wave.normal;
+   			    waveNormal = -waveNormal;
 				nMat = -nMat;
    			}
 
-			normal = mix(normalize(gl_NormalMatrix * wave.normal), normal, PHYSICS_OCEAN_TRANSITION);
+			normal = mix(normalize(gl_NormalMatrix * waveNormal), normal, PHYSICS_OCEAN_TRANSITION);
 			normal = mix(nMat, normal, physics_localWaviness_fade);
-			Albedo = mix(Albedo, vec3(1.0), wave.foam);
-			gl_FragData[0].a = mix(1.0/255.0, 1.0, wave.foam);
+			Albedo = mix(Albedo, vec3(1.0), waveFoam);
+			gl_FragData[0].a = mix(1.0/255.0, 1.0, waveFoam);
 		}
 	#endif
 
 	vec3 worldSpaceNormal = viewToWorld(normal).xyz;
 	
-	#if defined LARGE_WAVE_DISPLACEMENT && !defined PHYSICS_OCEAN && !defined PHYSICSMOD_OCEAN_SHADER_V2
+	#if defined LARGE_WAVE_DISPLACEMENT && !defined PHYSICS_OCEAN && !defined PHYSICSMOD_OCEAN_SHADER_V2 && !defined PHYSICS_OCEAN_V3
 		if (isWater){
 			normal = largeWaveDisplacementNormal;
 		}
@@ -882,7 +893,7 @@ if (gl_FragCoord.x * texelSize.x < 1.0  && gl_FragCoord.y * texelSize.y < 1.0 )	
 	// tangent space normals for refraction
 	vec2 TangentNormal = NormalTex.xy;
 	
-	#if (defined PHYSICSMOD_OCEAN_SHADER && defined PHYSICS_OCEAN || defined PHYSICSMOD_OCEAN_SHADER_V2)
+	#if (defined PHYSICSMOD_OCEAN_SHADER && defined PHYSICS_OCEAN || defined PHYSICSMOD_OCEAN_SHADER_V2 || defined PHYSICS_OCEAN_V3)
 		rippleBump *= physics_localWaviness;
 		float bumpmult = mix(isWater ? 1.0 : NORMAL_MAP_MULT, isWater ? PHYSICS_OCEAN_TRANSITION : NORMAL_MAP_MULT, physics_localWaviness_fade);
 
@@ -893,8 +904,8 @@ if (gl_FragCoord.x * texelSize.x < 1.0  && gl_FragCoord.y * texelSize.y < 1.0 )	
 
 	worldSpaceNormal = viewToWorld(normal);
 	
-	#if (defined PHYSICSMOD_OCEAN_SHADER && defined PHYSICS_OCEAN || defined PHYSICSMOD_OCEAN_SHADER_V2)
-		if (isWater) TangentNormal = mix(NormalTex.xy, normalize(wave.normal).xz, physics_localWaviness_fade);
+	#if (defined PHYSICSMOD_OCEAN_SHADER && defined PHYSICS_OCEAN || defined PHYSICSMOD_OCEAN_SHADER_V2 || defined PHYSICS_OCEAN_V3)
+		if (isWater) TangentNormal = mix(NormalTex.xy, normalize(waveNormal).xz, physics_localWaviness_fade);
 	#endif
 
 	gl_FragData[2].r = encodeVec2(TangentNormal*0.5+0.5);

@@ -151,7 +151,10 @@ void main() {
 
 	bool isWater = mc_Entity.x == 8.0;
 
-	#if defined PHYSICSMOD_OCEAN_SHADER && defined PHYSICS_OCEAN
+	#ifdef PHYSICS_OCEAN_V3
+		vec4 finalPosition = physics_oceanVertex(gl_Vertex);
+		vec3 position = mat3(gl_ModelViewMatrix) * vec3(finalPosition) + gl_ModelViewMatrix[3].xyz;
+	#elif defined PHYSICSMOD_OCEAN_SHADER && defined PHYSICS_OCEAN
     	// basic texture to determine how shallow/far away from the shore the water is
     	physics_localWaviness = texelFetch(physics_waviness, ivec2(gl_Vertex.xz) - physics_textureOffset, 0).r;
     	// transform gl_Vertex (since it is the raw mesh, i.e. not transformed yet)

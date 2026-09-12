@@ -199,11 +199,19 @@ void main() {
     vec4 data1 = clamp( encode(normals, PackLightmaps), 0.0, 1.0);
     
     // alpha is material masks, set it to 0.65 to make a DH LODs mask. 
-	#ifdef DH_NOISE_TEXTURE
+	#if defined DH_NOISE_TEXTURE && !defined DISTANT_HORIZONS_TEXTURES
 		vec4 Albedo = applyNoise(gcolor, viewDist);
 	#else
 		vec4 Albedo = vec4(gcolor.rgb, 1.0);
 	#endif
+
+    #ifdef DISTANT_HORIZONS_TEXTURES
+    if (dh_hasTexture()) {
+        vec4 that = dh_sampleTexture();
+        vec3 clampedColor = clamp(Albedo.rgb * (that.rgb * 2.0), 0.0, 1.0);
+        Albedo.rgb = mix(Albedo.rgb, clampedColor, that.a);
+    }
+   #endif
     // vec3 worldPos = mat3(gbufferModelViewInverse)*pos.xyz + cameraPosition;
     // worldPos = (worldPos*vec3(1.0,1./48.,1.0)/4) ;
     // worldPos = floor(worldPos * 4.0 + 0.001) / 32.0;
